@@ -1,29 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
+#include <string.h>
 #include "GramSchmidt.h"
+#include "Enumeration.h"
+#include "ParseArguments.h"
 
-int main()
+int main(int argc, char *argv[])
 {
-    int n = 3;
+    int n;
 
-    double **basis = (double **)malloc(n * sizeof(double *));
-
-    if (basis == NULL)
+    for (int i = 1; i < argc; i++)
     {
-        printf("Memory allocation failed.\n");
-        return 1;
-    }
-
-    for (int i = 0; i < n; i++)
-    {
-        basis[i] = (double *)malloc(n * sizeof(double));
-
-        if (basis[i] == NULL)
+        if (strstr(argv[i], "]") != NULL)
         {
-            printf("Memory allocation failed.\n");
-            return 1;
+            n = i;
+            break;
         }
     }
+
+    double **basis = ParseArguments(argc, argv, n);
 
     double **u = (double **)malloc(n * sizeof(double *));
 
@@ -63,22 +59,13 @@ int main()
         }
     }
 
-    // basis[0][0] = 3;
-    // basis[0][1] = 1;
-    // basis[1][0] = 2;
-    // basis[1][1] = 2;
-
-    basis[0][0] = 4;
-    basis[0][1] = 1;
-    basis[0][2] = 2;
-    basis[1][0] = 4;
-    basis[1][1] = 7;
-    basis[1][2] = 2;
-    basis[2][0] = 3;
-    basis[2][1] = 1;
-    basis[2][2] = 7;
-
     GramSchmidt(basis, u, mu, n);
+
+    double result;
+
+    result = Enumeration(u, mu, 100000000000000000, n);
+
+    printf("%lf \n", sqrt(result));
 
     for (int i = 0; i < n; i++)
     {
