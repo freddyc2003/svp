@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include "LLL.h"
 #include "GramSchmidt.h"
 #include "Enumeration.h"
 #include "ParseArguments.h"
@@ -58,6 +59,8 @@ int main(int argc, char *argv[])
             return 1;
         }
     }
+
+    LLL(basis, u, mu, 0.75, n);
 
     GramSchmidt(basis, u, mu, n);
 
