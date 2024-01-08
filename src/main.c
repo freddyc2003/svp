@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i < n; i++)
     {
-        u[i] = (double *)malloc(n * sizeof(double));
+        u[i] = (double *)calloc(n, sizeof(double));
 
         if (u[i] == NULL)
         {
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i < n; i++)
     {
-        mu[i] = (double *)malloc(n * sizeof(double));
+        mu[i] = (double *)calloc(n, sizeof(double));
 
         if (mu[i] == NULL)
         {

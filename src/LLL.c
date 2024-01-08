@@ -4,6 +4,8 @@
 
 void LLL(double **B, double **u, double **mu, int delta, int N)
 {
+    GramSchmidt(B, u, mu, N);
+
     int k = 1;
 
     while (k < N)
