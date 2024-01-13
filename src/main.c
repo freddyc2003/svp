@@ -20,13 +20,11 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    for (n = 1; n < argc; n++) {
-        if (strstr(argv[n], "]") != NULL) {
-            break;
-        }
-    }
-
-    // printf("%d \n", n);
+    // for (n = 1; n < argc; n++) {
+    //     if (strstr(argv[n], "]") != NULL) {
+    //         break;
+    //     }
+    // }
 
     double **basis = (double **)malloc(n * sizeof(double *));
 

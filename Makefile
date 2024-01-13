@@ -1,5 +1,6 @@
 CXX := gcc
-CXXFLAGS := -Wall -Werror -g -O3
+CXXFLAGS := -Wall -Werror -O3
+DFLAGS := -g
 
 SRC_DIR := src
 OBJ_DIR := obj
@@ -14,21 +15,20 @@ TEST_TARGET := runtest
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $^ -lm
+	$(CXX) $(CXXFLAGS) $(DFLAGS) -o $@ $^ -lm
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
+	$(CXX) $(CXXFLAGS) $(DFLAGS) -c -o $@ $<
 
 cpplint:
-	cpplint --filter=-legal,-build,-readability/casting $(SRC_DIR)/*.c $(SRC_DIR)/*.h
+	cpplint --filter=-legal,-build,-readability/casting $(SRC_DIR)/*.[c,h] 
 
-test:
-	$(CXX) -o runtest test/test.c
+test: $(TARGET)
+	$(CXX) -o runtest $(TEST_DIR)/test.c
 	./$(TEST_TARGET)
 	make clean
 
 clean:
 	rm -rf $(OBJ_DIR)/*.o $(TARGET) $(TEST_TARGET)
-
 
 .PHONY: all cpplint test

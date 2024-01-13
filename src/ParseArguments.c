@@ -12,10 +12,10 @@ int ParseArguments(int argc, char **argv, double **basis, int n) {
         char *eptr;
         double result;
 
-        printf("%s \n", arg);
+        // printf("%s \n", arg);
 
         if (c == 0) {
-            printf("c=0, arg[0]=%c \n", arg[0]);
+            // printf("c=0, arg[0]=%c \n", arg[0]);
 
             if (arg[0] != '[') {
                 // should be an opening bracket
@@ -23,14 +23,14 @@ int ParseArguments(int argc, char **argv, double **basis, int n) {
                 return 1;
             } else {
                 arg++;
-                printf("arg=%s \n", arg);
+                // printf("arg=%s \n", arg);
             }
         }
 
         result = strtod(arg, &eptr);
 
-        printf("result=%lf \n", result);
-        printf("eptr=%s \n", eptr);
+        // printf("result=%lf \n", result);
+        // printf("eptr=%s \n", eptr);
 
         if (eptr == arg) {
             printf("Invalid input\n");
