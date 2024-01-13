@@ -12,46 +12,49 @@ int ParseArguments(int argc, char **argv, double **basis, int n) {
         char *eptr;
         double result;
 
-        // printf("%s \n", arg);
+        printf("%s \n", arg);
 
         if (c == 0) {
-            // printf("c=0, arg[0]=%c \n", arg[0]);
+            printf("c=0, arg[0]=%c \n", arg[0]);
 
             if (arg[0] != '[') {
                 // should be an opening bracket
-                printf("There should be an opening bracket but there isn't \n");
+                printf("Invalid input\n");
                 return 1;
             } else {
                 arg++;
-                // printf("arg=%s \n", arg);
+                printf("arg=%s \n", arg);
             }
         }
 
         result = strtod(arg, &eptr);
 
-        // printf("result=%lf \n", result);
+        printf("result=%lf \n", result);
+        printf("eptr=%s \n", eptr);
+
+        if (eptr == arg) {
+            printf("Invalid input\n");
+            return 1;
+        }
+
+        basis[v][c] = result;
 
         if (c == (n - 1)) {
             if (*eptr != ']') {
                 // should be a closing bracket...
-                printf("There should be a closing bracket but there isn't \n");
+                printf("Invalid input\n");
                 return 1;
             } else {
-                basis[v][c] = result;
+                eptr++;
                 v += 1;
                 c = 0;
             }
         } else {
-            if (eptr == arg) {
-                printf("Invalid conversion to double \n");
-                return 1;
-            } else if (*eptr != '\0') {
-                printf("Invalid conversion to double \n");
-                return 1;
-            }
-
-            basis[v][c] = result;
             c += 1;
+        }
+        if (*eptr != '\0') {
+            printf("Invalid input\n");
+            return 1;
         }
     }
 

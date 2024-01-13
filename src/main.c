@@ -13,11 +13,20 @@
 int main(int argc, char *argv[]) {
     int n;
 
+    n = sqrt(argc - 1);
+
+    if (pow(round(n), 2) != argc - 1) {
+        printf("Invalid input\n");
+        return 1;
+    }
+
     for (n = 1; n < argc; n++) {
         if (strstr(argv[n], "]") != NULL) {
             break;
         }
     }
+
+    // printf("%d \n", n);
 
     double **basis = (double **)malloc(n * sizeof(double *));
 
