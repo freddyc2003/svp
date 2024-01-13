@@ -1,41 +1,65 @@
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
-#include "LLL.h"
-#include "GramSchmidt.h"
-#include "Enumeration.h"
-#include "ParseArguments.h"
 
-int main(int argc, char *argv[])
-{
+#include "Enumeration.h"
+#include "GramSchmidt.h"
+#include "LLL.h"
+#include "ParseArguments.h"
+#include "VectorOperations.h"
+#include "WriteResult.h"
+
+int main(int argc, char *argv[]) {
     int n;
 
-    for (int i = 1; i < argc; i++)
-    {
-        if (strstr(argv[i], "]") != NULL)
-        {
-            n = i;
+    for (n = 1; n < argc; n++) {
+        if (strstr(argv[n], "]") != NULL) {
             break;
         }
     }
 
-    double **basis = ParseArguments(argc, argv, n);
+    double **basis = (double **)malloc(n * sizeof(double *));
 
-    double **u = (double **)malloc(n * sizeof(double *));
-
-    if (u == NULL)
-    {
+    if (basis == NULL) {
         printf("Memory allocation failed.\n");
         return 1;
     }
 
-    for (int i = 0; i < n; i++)
-    {
-        u[i] = (double *)calloc(n, sizeof(double));
+    for (int i = 0; i < n; i++) {
+        basis[i] = (double *)malloc(n * sizeof(double *));
 
-        if (u[i] == NULL)
-        {
+        if (basis[i] == NULL) {
+            printf("Memory allocation failed.\n");
+            return 1;
+        }
+    }
+
+    int errno = ParseArguments(argc, argv, basis, n);
+
+    if (errno == 1) {
+        return 1;
+    }
+
+    printf("Basis: \n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            printf("%.15f ", basis[i][j]);
+        }
+        printf("\n");
+    }
+
+    double **u = (double **)malloc(n * sizeof(double *));
+
+    if (u == NULL) {
+        printf("Memory allocation failed.\n");
+        return 1;
+    }
+
+    for (int i = 0; i < n; i++) {
+        u[i] = (double *)malloc(n * sizeof(double));
+
+        if (u[i] == NULL) {
             printf("Memory allocation failed.\n");
             return 1;
         }
@@ -43,47 +67,79 @@ int main(int argc, char *argv[])
 
     double **mu = (double **)malloc(n * sizeof(double *));
 
-    if (mu == NULL)
-    {
+    if (mu == NULL) {
         printf("Memory allocation failed.\n");
         return 1;
     }
 
-    for (int i = 0; i < n; i++)
-    {
-        mu[i] = (double *)calloc(n, sizeof(double));
+    for (int i = 0; i < n; i++) {
+        mu[i] = (double *)malloc(n * sizeof(double));
 
-        if (mu[i] == NULL)
-        {
+        if (mu[i] == NULL) {
             printf("Memory allocation failed.\n");
             return 1;
         }
     }
 
-    LLL(basis, u, mu, 0.75, n);
+    GramSchmidt(basis, u, mu, n);
+
+    // printf("Before LLL \n");
+    // for (int i = 0; i < n; i++)
+    // {
+    //     for (int j = 0; j < n; j++)
+    //     {
+    //         printf("%.15f ", mu[i][j]);
+    //     }
+    //     printf("\n");
+    // }
+
+    LLL(basis, u, mu, 0.99, n);
+
+    // // printf("Before LLL \n");
+    // // for (int i = 0; i < n; i++)
+    // // {
+    // //     for (int j = 0; j < n; j++)
+    // //     {
+    // //         printf("%.15f ", basis[i][j]);
+    // //     }
+    // //     printf("\n");
+    // // }
+
+    // // // printf("---------------- \n");
+
+    // // // for (int i = 0; i < n; i++)
+    // // // {
+    // // //     for (int j = 0; j < n; j++)
+    // // //     {
+    // // //         printf("%.15f ", basis[i][j]);
+    // // //     }
+    // // //     printf("\n");
+    // // // }
+
+    // // // printf("---------------- \n");
 
     GramSchmidt(basis, u, mu, n);
 
     double result;
 
-    result = Enumeration(u, mu, 100000000000000000, n);
+    // // result = Enumeration(u, mu, 50, n);
+    result = Enumeration(u, mu, 10000000000, n);
 
-    printf("%lf \n", sqrt(result));
+    // printf("%.15f \n", sqrt(result));
 
-    for (int i = 0; i < n; i++)
-    {
+    WriteResult(sqrtl(result));
+
+    for (int i = 0; i < n; i++) {
         free(basis[i]);
     }
     free(basis);
 
-    for (int i = 0; i < n; i++)
-    {
+    for (int i = 0; i < n; i++) {
         free(u[i]);
     }
     free(u);
 
-    for (int i = 0; i < n; i++)
-    {
+    for (int i = 0; i < n; i++) {
         free(mu[i]);
     }
     free(mu);

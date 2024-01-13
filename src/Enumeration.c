@@ -1,67 +1,57 @@
-#include <stdio.h>
 #include <math.h>
+#include <stdio.h>
 #include <stdlib.h>
+
 #include "VectorOperations.h"
 
-double Enumeration(double **u, double **mu, double R, int n)
-{
+double Enumeration(double **u, double **mu, double R, int n) {
     double R_SQUARED = pow(R, 2);
 
     double *p = (double *)calloc((n + 1), sizeof(double));
 
-    if (p == NULL)
-    {
+    if (p == NULL) {
         printf("Memory allocation failed.\n");
-        return 1; // Return an error code
+        return 1;  // Return an error code
     }
 
     double *v = (double *)calloc(n, sizeof(double));
 
-    if (v == NULL)
-    {
+    if (v == NULL) {
         printf("Memory allocation failed.\n");
-        return 1; // Return an error code
+        return 1;  // Return an error code
     }
 
     v[0] = 1.0;
 
     double *c = (double *)calloc(n, sizeof(double));
 
-    if (c == NULL)
-    {
+    if (c == NULL) {
         printf("Memory allocation failed.\n");
-        return 1; // Return an error code
+        return 1;  // Return an error code
     }
 
     double *w = (double *)calloc(n, sizeof(double));
 
-    if (w == NULL)
-    {
+    if (w == NULL) {
         printf("Memory allocation failed.\n");
-        return 1; // Return an error code
+        return 1;  // Return an error code
     }
 
     int k = 0;
     int last_nonzero = 0;
 
-    while (1)
-    {
+    while (1) {
         p[k] = p[k + 1] + pow((v[k] - c[k]), 2) * Norm(u[k], n);
 
-        if (p[k] < R_SQUARED)
-        {
-            if (k == 0)
-            {
+        if (p[k] < R_SQUARED) {
+            if (k == 0) {
                 R_SQUARED = p[k];
-            }
-            else
-            {
+            } else {
                 k -= 1;
 
                 double temp = 0;
 
-                for (int i = k + 1; i < n; i++)
-                {
+                for (int i = k + 1; i < n; i++) {
                     temp += mu[i][k] * v[i];
                 }
 
@@ -69,13 +59,10 @@ double Enumeration(double **u, double **mu, double R, int n)
                 v[k] = round(c[k]);
                 w[k] = 1;
             }
-        }
-        else
-        {
+        } else {
             k += 1;
 
-            if (k == n)
-            {
+            if (k == n) {
                 free(p);
                 free(v);
                 free(c);
@@ -84,20 +71,14 @@ double Enumeration(double **u, double **mu, double R, int n)
                 return R_SQUARED;
             }
 
-            if (k >= last_nonzero)
-            {
+            if (k >= last_nonzero) {
                 last_nonzero = k;
 
                 v[k] += 1;
-            }
-            else
-            {
-                if (v[k] > c[k])
-                {
+            } else {
+                if (v[k] > c[k]) {
                     v[k] -= w[k];
-                }
-                else
-                {
+                } else {
                     v[k] += w[k];
                 }
 

@@ -1,5 +1,7 @@
 CXX := gcc
-CXXFLAGS := -Wall -Werror
+CXXFLAGS := -Wall -Werror -g
+
+#-O3
 
 SRC_DIR := src
 OBJ_DIR := obj

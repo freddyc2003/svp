@@ -1,67 +1,103 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-double **ParseArguments(int argc, char **argv, int n)
-{
-    double **basis = (double **)malloc(n * sizeof(double *));
-
-    if (basis == NULL)
-    {
-        printf("Memory allocation failed.\n");
-    }
-
-    for (int i = 0; i < n; i++)
-    {
-        basis[i] = (double *)malloc(n * sizeof(double));
-
-        if (basis[i] == NULL)
-        {
-            printf("Memory allocation failed.\n");
-        }
-    }
-
-    int vector = 0;
+int ParseArguments(int argc, char **argv, double **basis, int n) {
     int c = 0;
+    int v = 0;
 
-    for (int i = 1; i < argc; i++)
-    {
-        char *argument = argv[i];
+    for (int i = 1; i < argc; i++) {
+        char *arg = argv[i];
+        char *eptr;
+        double result;
 
-        // printf("Argument %d (before): %s\n", i, argument);
+        // printf("%s \n", arg);
 
-        int k = 0;
+        if (c == 0) {
+            // printf("c=0, arg[0]=%c \n", arg[0]);
 
-        for (int j = 0; argument[j] != '\0'; j++)
-        {
-            if (argument[j] != '[' && argument[j] != ']')
-            {
-                argument[k] = argument[j];
-                k++;
+            if (arg[0] != '[') {
+                // should be an opening bracket
+                printf("There should be an opening bracket but there isn't \n");
+                return 1;
+            } else {
+                arg++;
+                // printf("arg=%s \n", arg);
             }
         }
 
-        argument[k] = '\0';
+        result = strtod(arg, &eptr);
 
-        // printf("Argument %d (after): %s\n", i, argument);
+        // printf("result=%lf \n", result);
 
-        double result = strtod(argument, NULL);
+        if (c == (n - 1)) {
+            if (*eptr != ']') {
+                // should be a closing bracket...
+                printf("There should be a closing bracket but there isn't \n");
+                return 1;
+            } else {
+                basis[v][c] = result;
+                v += 1;
+                c = 0;
+            }
+        } else {
+            if (eptr == arg) {
+                printf("Invalid conversion to double \n");
+                return 1;
+            } else if (*eptr != '\0') {
+                printf("Invalid conversion to double \n");
+                return 1;
+            }
 
-        // printf("Converted value: %lf\n", result);
-
-        basis[vector][c] = result;
-
-        c += 1;
-
-        // printf("basis[%d][%d] \n", vector, c);
-
-        if (c == n)
-        {
-            vector += 1;
-            c = 0;
+            basis[v][c] = result;
+            c += 1;
         }
     }
 
-    return basis;
+    return 0;
 }
+
+// int vector = 0;
+// int c = 0;
+
+// for (int i = 1; i < argc; i++)
+// {
+//     char *argument = argv[i];
+
+//     // printf("Argument %d (before): %s\n", i, argument);
+
+//     int k = 0;
+
+//     for (int j = 0; argument[j] != '\0'; j++)
+//     {
+//         if (argument[j] != '[' && argument[j] != ']')
+//         {
+//             argument[k] = argument[j];
+//             k++;
+//         }
+//     }
+
+//     argument[k] = '\0';
+
+//     // printf("Argument %d (after): %s\n", i, argument);
+
+//     double result = strtod(argument, NULL);
+
+//     // printf("Converted value: %lf\n", result);
+
+//     basis[vector][c] = result;
+
+//     c += 1;
+
+//     // printf("basis[%d][%d] \n", vector, c);
+
+//     if (c == n)
+//     {
+//         vector += 1;
+//         c = 0;
+//     }
+// }
+
+// return basis;
+// }
