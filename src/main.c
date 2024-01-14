@@ -14,19 +14,16 @@
 int main(int argc, char *argv[]) {
     int n;
 
+    // Infer the dimensions of the lattice basis from the number of arguments
     n = sqrt(argc - 1);
 
+    // If is not a perfect square input basis is not square
     if (pow(round(n), 2) != argc - 1) {
         printf("Invalid input\n");
         return 1;
     }
 
-    // for (n = 1; n < argc; n++) {
-    //     if (strstr(argv[n], "]") != NULL) {
-    //         break;
-    //     }
-    // }
-
+    // Allocate a 2D array of size n x n for the lattice basis
     double **basis = (double **)malloc(n * sizeof(double *));
 
     if (basis == NULL) {
@@ -34,8 +31,9 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    // Allocate memory for each vector in the lattice basis
     for (int i = 0; i < n; i++) {
-        basis[i] = (double *)malloc(n * sizeof(double *));
+        basis[i] = (double *)malloc(n * sizeof(double));
 
         if (basis[i] == NULL) {
             printf("Memory allocation failed.\n");
@@ -43,20 +41,15 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    // Parse the command line arguments and store in the basis array
     int errno = ParseArguments(argc, argv, basis, n);
 
+    // Error occured when parsing the input halt the program
     if (errno == 1) {
         return 1;
     }
 
-    // printf("Basis: \n");
-    // for (int i = 0; i < n; i++) {
-    //     for (int j = 0; j < n; j++) {
-    //         printf("%.15f ", basis[i][j]);
-    //     }
-    //     printf("\n");
-    // }
-
+    // Allocate memory for a 2D array to store the orthogonalised basis vectors
     double **u = (double **)malloc(n * sizeof(double *));
 
     if (u == NULL) {
@@ -64,6 +57,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    // Allocate memory for each vector in the orthogonalised basis
     for (int i = 0; i < n; i++) {
         u[i] = (double *)malloc(n * sizeof(double));
 
@@ -73,6 +67,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    // Allocate memory for a 2D array to store gram schmidt coefficients
     double **mu = (double **)malloc(n * sizeof(double *));
 
     if (mu == NULL) {
@@ -81,7 +76,8 @@ int main(int argc, char *argv[]) {
     }
 
     for (int i = 0; i < n; i++) {
-        mu[i] = (double *)malloc(n * sizeof(double));
+        // Make sure they are all zeros as they might not be overwritten
+        mu[i] = (double *)calloc(n, sizeof(double));
 
         if (mu[i] == NULL) {
             printf("Memory allocation failed.\n");
@@ -89,81 +85,52 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    // Apply the gram schmidt process to the lattice basis
     GramSchmidt(basis, u, mu, n);
 
-    // printf("Before LLL \n");
+    // LLL delta parameter 
+    double delta = 0.99;
+
+    // Apply the LLL reduction to the lattice basis
+    LLL(basis, u, mu, delta, n);
+
     // for (int i = 0; i < n; i++) {
     //     for (int j = 0; j < n; j++) {
-    //         printf("%.15f ", mu[i][j]);
-    //     }
-    //     printf("\n");
-    // }
-    // printf("Before LLL \n");
-    // for (int i = 0; i < n; i++) {
-    //     for (int j = 0; j < n; j++) {
-    //         printf("%.15f ", u[i][j]);
+    //         printf("%.2lf ", basis[i][j]);
     //     }
     //     printf("\n");
     // }
 
-    // printf("u Before LLL \n");
-    // for (int i = 0; i < n; i++)
-    // {
-    //     for (int j = 0; j < n; j++)
-    //     {
-    //         printf("%.15f ", u[i][j]);
-    //     }
-    //     printf("\n");
-    // }
+    // Recompute u and mu on the reduced lattice basis
+    GramSchmidt(basis, u, mu, n);
 
-    LLL(basis, u, mu, 0.75, n);
-
-    // printf("After LLL \n");
-    // for (int i = 0; i < n; i++) {
-    //     for (int j = 0; j < n; j++) {
-    //         printf("%.15f ", basis[i][j]);
-    //     }
-    //     printf("\n");
-    // }
-
-    // // // printf("---------------- \n");
-
-    // // // for (int i = 0; i < n; i++)
-    // // // {
-    // // //     for (int j = 0; j < n; j++)
-    // // //     {
-    // // //         printf("%.15f ", basis[i][j]);
-    // // //     }
-    // // //     printf("\n");
-    // // // }
-
-    // // // printf("---------------- \n");
-
-    // GramSchmidt(basis, u, mu, n);
-
+    // Use Gaussian heuristic to calculate upper bound on the shortest vector  
     double bound = Bound(u, n);
 
-    printf("Bound: %.15f \n", bound);
-
+    // To store the norm of the shortest vector
     double result;
 
-    // // // result = Enumeration(u, mu, 50, n);
+    // Run enumeration on the reduced basis
     result = Enumeration(u, mu, bound, n);
 
-    printf("Norm:  %.15f \n", sqrt(result));
+    printf("%.15f \n", sqrt(result));
 
+    // Write the result to result.txt
     WriteResult(sqrtl(result));
 
+    // Deallocate the memory for the basis 2D array
     for (int i = 0; i < n; i++) {
         free(basis[i]);
     }
     free(basis);
 
+    // Deallocate the memory for the 2D array u
     for (int i = 0; i < n; i++) {
         free(u[i]);
     }
     free(u);
 
+    // Deallocate the memory for the 2D array mu
     for (int i = 0; i < n; i++) {
         free(mu[i]);
     }

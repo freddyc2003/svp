@@ -14,7 +14,5 @@ double Bound(double **u, int N) {
 
     double lambda = sqrt(1 + (N / 4.0)) * pow_vol;
 
-    // double result = sqrt(N / (2.0 * M_PI * M_E)) * pow_vol;
-
     return lambda;
 }

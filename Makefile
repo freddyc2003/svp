@@ -1,5 +1,5 @@
 CXX := gcc
-CXXFLAGS := -Wall -Werror -O3
+CXXFLAGS := -Wall -Werror
 DFLAGS := -g
 
 SRC_DIR := src
