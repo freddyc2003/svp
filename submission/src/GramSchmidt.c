@@ -13,7 +13,7 @@ void GramSchmidt(double **B, double **u, double **mu, int N) {
 
         for (int k = 0; k < i; k++) {
             mu[i][k] =
-                InnerProduct(B[i], u[k], N) * (1 / InnerProduct(u[k], u[k], N));
+                InnerProduct(B[i], u[k], N) / InnerProduct(u[k], u[k], N);
 
             for (int j = 0; j < N; j++) {
                 u[i][j] -= mu[i][k] * u[k][j];

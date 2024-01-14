@@ -84,7 +84,7 @@
 // ) <solids>
 
 = Approach
-I chose to use the Schnorr–Euchner Enumeration algorithm @Yasuda:2020 for my approach to solve the SVP problem as it provides an exact solution and is reasonably simple to implement. Enumeration is a polynomial-space algorithm using less memory than the other main approach sieving which is an exponential-space algorithm. However, enumeration has super-exponential run-time @Gama:2010 whereas sieving has single exponential run-time @Ajtai:2001. For this coursework our implementation will only be evaluated on inputs up to 10 dimensions so enumeration is a natural choice as it typically has good practical performance on low dimensions.
+I chose to use the Schnorr–Euchner Enumeration algorithm @Yasuda:2020 for my approach to solve the SVP problem as it provides an exact solution and is reasonably simple to implement. Enumeration is a polynomial-space algorithm using less memory than the other main approach sieving which is an exponential-space algorithm. However, enumeration has super-exponential run-time @Gama:2010 whereas sieving has single exponential run-time @Ajtai:2001. For this coursework our implementation will only be evaluated on inputs up to 10 dimensions so enumeration is a natural choice as in practise it typically has good performance on low dimensions.
 
 The run-time of enumeration algorithms is greatly affected by the quality of the input basis. A better basis is shorter and more orthogonal @Kumar:2019. I therefore chose to implement the LLL basis reduction algorithm to preprocess the input basis before running the enumeration algorithm. I use the norm of the first vector in the reduced basis as the bound for the search space used by the enumeration algorithm.
 
@@ -92,6 +92,8 @@ The run-time of enumeration algorithms is greatly affected by the quality of the
 I chose to implement my final solution in C. The primary components of the program are the Gram Schmidt, LLL and Enumeration functions. The Gram Schmidt algorithm is implemented using floating-point arithmetic but initally I considered implementing the algorithm using exact arithmetic, storing the values as fractions to remove the floating point errors. However, I decided against this decision as the lost precision due to using floating-point arithmetic was negligble in comparson to the increase in run-time.
 
 All numerical values were stored as doubles as we are required to be able to handle at least 32-bit floating point precision as per the coursework. All vectors were stored as C arrays and matrices as 2D C arrays.
+
+The classical Gram-Schmidt algorithm I implemented is numerically unstable which means errors are introduced to the orthogonalised vectors and Gram-Schmidt coefficients due to the finite-precision of float-point arithmetic. These errors are particularly prevalent when the vectors are almost colinear
 
 = Run-time
 To test my implementation I generated uniform and knapsack like matrices of dimension $1 times 1$ to $40 times 40$ containing numbers of size 8, 16 and 32 bits.

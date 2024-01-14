@@ -143,14 +143,14 @@ int main(int argc, char *argv[]) {
 
     double bound = Bound(u, n);
 
-    printf("Bound: %.15f \n", bound);
+    // printf("Bound: %.15f \n", bound);
 
     double result;
 
     // // // result = Enumeration(u, mu, 50, n);
     result = Enumeration(u, mu, bound, n);
 
-    printf("Norm:  %.15f \n", sqrt(result));
+    // printf("Norm:  %.15f \n", sqrt(result));
 
     WriteResult(sqrtl(result));
 
