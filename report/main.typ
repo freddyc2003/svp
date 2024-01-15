@@ -84,28 +84,33 @@
 // ) <solids>
 
 = Approach
-I chose to use the Schnorr–Euchner Enumeration algorithm @Yasuda:2020 for my approach to solve the SVP problem as it provides an exact solution and is reasonably simple to implement. Enumeration is a polynomial-space algorithm using less memory than the other main approach sieving which is an exponential-space algorithm. However, enumeration has super-exponential run-time @Gama:2010 whereas sieving has single exponential run-time @Ajtai:2001. For this coursework our implementation will only be evaluated on inputs up to 10 dimensions so enumeration is a natural choice as in practise it typically has good performance on low dimensions.
+I chose to use a brute-force approach to solve the shortest vector problem (SVP) as it provides an exact solution and is reasonably simple to implement. The algorithm I implemented was the Schnorr-Euchner Enumeration @Yasuda:2020, which uses polynomial-space which is less memory than the other main approach sieving which is an exponential-space algorithm. However, enumeration has a super-exponential run-time @Gama:2010 but is a natural choice as in practice it typically has good performance on low dimensions.
 
-The run-time of enumeration algorithms is greatly affected by the quality of the input basis. A better basis is shorter and more orthogonal @Kumar:2019. I therefore chose to implement the LLL basis reduction algorithm to preprocess the input basis before running the enumeration algorithm. I use the norm of the first vector in the reduced basis as the bound for the search space used by the enumeration algorithm.
+The run-time of enumeration algorithms is greatly affected by the quality of the input basis. A better basis is shorter and more orthogonal @Kumar:2019. I, therefore, chose to implement the LLL reduction algorithm @Plantard_Susilo_Zhang_2013 to preprocess the lattice basis before running the enumeration algorithm.
+
+I also make use of the Gaussian Heuristic @Yasuda:2020 to obtain an upper bound for the length of the shortest vector in the lattice. This is used to define the search space for the enumeration algorithm.
 
 = Implementation
-I chose to implement my final solution in C. The primary components of the program are the Gram Schmidt, LLL and Enumeration functions. The Gram Schmidt algorithm is implemented using floating-point arithmetic but initally I considered implementing the algorithm using exact arithmetic, storing the values as fractions to remove the floating point errors. However, I decided against this decision as the lost precision due to using floating-point arithmetic was negligble in comparson to the increase in run-time.
+The primary issue I experienced whilst implementing my solution was working with floating-point values. I chose to implement the classical Gram-Schmidt orthogonalisation (GSO) with floating-point arithmetic (fpa). This is known to be numerically unstable and in the worst case when applied within the LLL algorithm the lattice basis will not necessarily be reduced at all because of inaccuracies in the GSO coefficients @Nguên_Stehlé_2005. I experienced these problems with my implementation on a number of different types of tests.
 
-All numerical values were stored as doubles as we are required to be able to handle at least 32-bit floating point precision as per the coursework. All vectors were stored as C arrays and matrices as 2D C arrays.
-
-The classical Gram-Schmidt algorithm I implemented is numerically unstable which means errors are introduced to the orthogonalised vectors and Gram-Schmidt coefficients due to the finite-precision of float-point arithmetic. These errors are particularly prevalent when the vectors are almost colinear
+In practise a floating-point variant of the LLL algorithm, $L^2$ is usually implemented which is proven to output a reduced basis in polynomial time. However, I was unable to successfully implement this algorithm.
 
 = Run-time
-To test my implementation I generated uniform and knapsack like matrices of dimension $1 times 1$ to $40 times 40$ containing numbers of size 8, 16 and 32 bits.
+To test the run-time of my implementation I generated uniform and knapsack like matrices of dimension $1 times 1$ to $20 times 20$ containing numbers of size 8, 16 and 32 bits using the fplll library.
 
-To record the run-time I used hyperfine a command-line benchmarking tool.
+To measure the run-time of my implementation I used hyperfine a command-line benchmarking tool.
 
-The tests were performed on a virtual machine with 4 cores and 32 GB RAM running an Ubuntu Linux image.
+The tests were performed on a virtual machine with 4 cores and 8 GB RAM running an Ubuntu Linux image.
 
 = Memory
+To test the amount of memory my implementation used I measured the total bytes used throughout the entire execution of the program as well as the maximum number of bytes used at any point during the programs execution.
+
+This test was repeated for lattices of dimensions 2, 5, 10 and 20 and the results are shown in Table x.
 
 = Accuracy
-To determine the accuracy of my implementation I compared my solution to the solution generated by the fpylll library. Given that I am working with floating-point arithmetic it is likely that I encounter small differences between the my solution and the reference solution. Therefore, I decided to allow a small tolerance level of $0.00001$ that my solution must be within to pass.
+To determine the accuracy of my implementation I compared my solution to the solution generated by the fplll library. Given the fplll module uses superior algorithms to deal with floating-point errors, for certain lattices my solution will be less accurate than that produced by fplll. Therefore, I decided to allow a small tolerance level of $0.00001$ that my solution must be within in order to pass.
+
+I ran my implementation on the same tests used to measure run-time and recorded the absolute differece between my solution and that generated by fplll and whether it passed given my specified tolerance.
 
 // = Background
 // #lorem(40)

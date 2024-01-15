@@ -1,9 +1,11 @@
 import csv
 import subprocess
 
-csv_file = "./testing/test_cases.csv"
+csv_file = "./testing/test.csv"
 
 count = 1
+
+timeout = 0
 
 with open(csv_file, newline="") as file:
     reader = csv.reader(file)
@@ -23,9 +25,14 @@ with open(csv_file, newline="") as file:
         try:
             # Running the bash command
             result = subprocess.run(
-                bash_command, shell=True, stdout=subprocess.PIPE, text=True, check=False, timeout=30
+                bash_command, shell=True, stdout=subprocess.PIPE, text=True, check=False, timeout=60
             )
         except subprocess.TimeoutExpired:
+            timeout += 1
+            with open("timeout.csv", "a", newline="") as hyperfine_results:
+                csv_writer = csv.writer(hyperfine_results)
+
+                csv_writer.writerow([row[1], row[2], row[3], row[4]])
             continue
 
         with open('result.csv', 'r') as result_file:
@@ -46,3 +53,5 @@ with open(csv_file, newline="") as file:
         print(f"{count}")
 
         count += 1
+
+print(f"Timeout = {timeout}")

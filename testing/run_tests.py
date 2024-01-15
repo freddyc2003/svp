@@ -22,7 +22,7 @@ with open(csv_file, newline="") as file:
 
         try:
             result = subprocess.run(
-                bash_command, shell=True, stdout=subprocess.PIPE, text=True, check=False, timeout=30
+                bash_command, shell=True, stdout=subprocess.PIPE, text=True, check=False, timeout=60
             )
         except subprocess.TimeoutExpired:
             total -= 1
