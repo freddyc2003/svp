@@ -94,13 +94,6 @@ int main(int argc, char *argv[]) {
     // Apply the LLL reduction to the lattice basis
     LLL(basis, u, mu, delta, n);
 
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            printf("%.2lf ", basis[i][j]);
-        }
-        printf("\n");
-    }
-
     // Recompute u and mu on the reduced lattice basis
     GramSchmidt(basis, u, mu, n);
 

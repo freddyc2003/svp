@@ -35,7 +35,7 @@ int ParseArguments(int argc, char **argv, double **basis, int n) {
 
         // If nothing to read pointer won't have moved
         if (eptr == arg) {
-            printf("Invalid input\n");
+            printf("Invalid input. Nothing to read.\n");
             return 1;
         }
 
@@ -46,7 +46,7 @@ int ParseArguments(int argc, char **argv, double **basis, int n) {
         if (c == (n - 1)) {
             // We expect it to contain a closing bracket if not error
             if (*eptr != ']') {
-                printf("Invalid input\n");
+                printf("Invalid input. Basis vector of incorrect length.\n");
                 return 1;
             } else {
                 // Closing bracket occured, now move the pointer passed it
@@ -63,7 +63,9 @@ int ParseArguments(int argc, char **argv, double **basis, int n) {
 
         // If the pointer returned from strtod isn't the empty character
         if (*eptr != '\0') {
-            printf("Invalid input\n");
+            printf(
+                "Invalid input. Vectors element contains invalid "
+                "characters.\n");
             return 1;
         }
     }

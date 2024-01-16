@@ -1,30 +1,30 @@
-CXX := gcc
-CXXFLAGS := -Wall -Werror
-DFLAGS := -g
+CC = gcc
+CFLAGS = -Wall -Werror -O3
+DFLAGS = -g
 
-SRC_DIR := src
-OBJ_DIR := obj
-TEST_DIR := test
+SRC_DIR = src
+OBJ_DIR = obj
+TEST_DIR = test
 
-SRCS := $(wildcard $(SRC_DIR)/*.c)
-OBJS := $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
+SRCS = $(wildcard $(SRC_DIR)/*.c)
+OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 
-TARGET := runme
-TEST_TARGET := runtest
+TARGET = runme
+TEST_TARGET = runtest
 
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) $(DFLAGS) -o $@ $^ -lm
+	$(CC) $(CFLAGS) $(DFLAGS) -o $@ $^ -lm
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	$(CXX) $(CXXFLAGS) $(DFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) $(DFLAGS) -c -o $@ $<
 
 cpplint:
 	cpplint --filter=-legal,-build,-readability/casting $(SRC_DIR)/*.[c,h] 
 
 test: $(TARGET)
-	$(CXX) -o runtest $(TEST_DIR)/test.c
+	$(CC) -o runtest $(TEST_DIR)/test.c
 	./$(TEST_TARGET)
 	make clean
 

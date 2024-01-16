@@ -1,7 +1,7 @@
 import csv
 import subprocess
 
-csv_file = "./testing/test.csv"
+csv_file = "./test-gen.csv"
 
 count = 1
 
@@ -11,16 +11,7 @@ with open(csv_file, newline="") as file:
     reader = csv.reader(file)
     
     for row in reader:
-        if(int(row[0]) > 40):
-            continue
-        if(row[2] == "intrel"):
-            continue
-        # if(int(row[0]) > 20 and row[2] == "intrel"):
-        #     continue
-
-        #print(row[3])
-        bash_command = f"hyperfine --max-runs 10 --export-csv result.csv './runme {row[3]}'"
-        #print(bash_command)
+        bash_command = f"hyperfine -N -u millisecond --max-runs 10 --export-csv result.csv './runme {row[3]}'"
 
         try:
             # Running the bash command
