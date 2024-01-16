@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 int main() {
-    // Command to run './runme' with the known lattice
+    // Command to run './runme' with a known lattice
     const char* command = "./runme [1.0 0.0 0.0] [0.0 1.0 0.0] [0.0 0.0 1.0]";
 
     // Execute the command

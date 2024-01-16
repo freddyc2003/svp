@@ -1,14 +1,14 @@
 CC = gcc
 CFLAGS = -Wall -Werror -O3
 
-SRC_DIR := src
-TEST_DIR := test
+SRC_DIR = src
+TEST_DIR = test
 
-SRCS := $(wildcard $(SRC_DIR)/*.c)
-OBJS := $(SRCS:.c=.o)
+SRCS = $(wildcard $(SRC_DIR)/*.c)
+OBJS = $(SRCS:.c=.o)
 
-TARGET := runme
-TEST_TARGET := runtest
+TARGET = runme
+TEST_TARGET = runtest
 
 all: $(TARGET)
 
