@@ -21,7 +21,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) $(DFLAGS) -c -o $@ $<
 
 cpplint:
-	cpplint --filter=-legal,-build,-readability/casting $(SRC_DIR)/*.[c,h] 
+	cpplint --filter=-legal,-build $(SRC_DIR)/*.[c,h]
 
 test: $(TARGET)
 	$(CC) -o runtest $(TEST_DIR)/test.c

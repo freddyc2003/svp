@@ -11,14 +11,14 @@ double Enumeration(double **u, double **mu, double R, int n) {
 
     if (p == NULL) {
         printf("Memory allocation failed.\n");
-        return 1;  // Return an error code
+        return 1;
     }
 
     double *v = (double *)calloc(n, sizeof(double));
 
     if (v == NULL) {
         printf("Memory allocation failed.\n");
-        return 1;  // Return an error code
+        return 1;
     }
 
     v[0] = 1.0;
@@ -27,14 +27,14 @@ double Enumeration(double **u, double **mu, double R, int n) {
 
     if (c == NULL) {
         printf("Memory allocation failed.\n");
-        return 1;  // Return an error code
+        return 1;
     }
 
     double *w = (double *)calloc(n, sizeof(double));
 
     if (w == NULL) {
         printf("Memory allocation failed.\n");
-        return 1;  // Return an error code
+        return 1;
     }
 
     int k = 0;
@@ -45,6 +45,7 @@ double Enumeration(double **u, double **mu, double R, int n) {
 
         if (p[k] < R_SQUARED) {
             if (k == 0) {
+                // Update the bound to the new minimum
                 R_SQUARED = p[k];
             } else {
                 k -= 1;
@@ -60,9 +61,12 @@ double Enumeration(double **u, double **mu, double R, int n) {
                 w[k] = 1;
             }
         } else {
+            // Move up the tree
             k += 1;
 
+            // Found a shortest vector
             if (k == n) {
+                // Free enumeration variables
                 free(p);
                 free(v);
                 free(c);

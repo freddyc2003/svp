@@ -1,6 +1,5 @@
-CXX := gcc
-CXXFLAGS := -Wall -Werror -O3
-DFLAGS := -g
+CC = gcc
+CFLAGS = -Wall -Werror -O3
 
 SRC_DIR := src
 TEST_DIR := test
@@ -14,16 +13,16 @@ TEST_TARGET := runtest
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) $(DFLAGS) -o $@ $^ -lm
+	$(CC) $(CFLAGS) -o $@ $^ -lm
 
 $(SRC_DIR)/%.o: $(SRC_DIR)/%.c
-	$(CXX) $(CXXFLAGS) $(DFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 cpplint:
-	cpplint --filter=-legal,-build,-readability/casting $(SRC_DIR)/*.[c,h]
+	cpplint --filter=-legal,-build $(SRC_DIR)/*.[c,h]
 
 test: $(TARGET)
-	$(CXX) -o $(TEST_TARGET) $(TEST_DIR)/test.c
+	$(CC) -o $(TEST_TARGET) $(TEST_DIR)/test.c
 	./$(TEST_TARGET)
 	make clean
 

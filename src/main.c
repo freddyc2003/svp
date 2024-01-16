@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
 
     // If is not a perfect square input basis is not square
     if (pow(round(n), 2) != argc - 1) {
-        printf("Invalid input\n");
+        printf("Invalid input. Lattice basis is not square.\n");
         return 1;
     }
 
@@ -105,8 +105,6 @@ int main(int argc, char *argv[]) {
 
     // Run enumeration on the reduced basis
     result = Enumeration(u, mu, bound, n);
-
-    printf("%.15f \n", sqrt(result));
 
     // Write the result to result.txt
     WriteResult(sqrtl(result));
