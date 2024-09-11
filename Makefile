@@ -12,6 +12,7 @@ OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 TARGET = runme
 TEST_TARGET = runtest
 
+# The main target
 all: $(TARGET)
 
 $(TARGET): $(OBJS)

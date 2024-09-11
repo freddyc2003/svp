@@ -46,7 +46,6 @@ with open(csv_file, newline="") as file:
             print("FAIL")
             print("--------------")
 
-        
         row = [row[0], row[1], row[2], row[3], row[4], float(output), accuracy]
 
         with open("accuracy-results.csv", "a", newline="") as csv_file:
